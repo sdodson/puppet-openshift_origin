@@ -14,9 +14,9 @@
 #  limitations under the License.
 #
 class openshift_origin::cartridges {
-  package { 'yum-plugin-versionlock':
-    ensure  => present,
-  }
+#  package { 'yum-plugin-versionlock':
+#    ensure  => present,
+#  }
 
   openshift_origin::openshift_cartridge { $::openshift_origin::install_cartridges: }
 
