@@ -34,12 +34,14 @@ class openshift_origin::nameserver {
     mode    => '0644',
     replace => false,
     require => File['/var/named/dynamic'],
+    notify  => Service['named'],
   }
 
   exec { 'create rndc.key':
     command => '/usr/sbin/rndc-confgen -a -r /dev/urandom',
     unless  => '/usr/bin/[ -f /etc/rndc.key ]',
     require => Package['bind'],
+    notify  => Service['named'],
   }
 
   file { '/etc/rndc.key':
@@ -47,6 +49,7 @@ class openshift_origin::nameserver {
     group   => 'named',
     mode    => '0640',
     require => Exec['create rndc.key'],
+    notify  => Service['named'],
   }
 
   file { '/var/named/forwarders.conf':
@@ -54,6 +57,7 @@ class openshift_origin::nameserver {
     group   => 'named',
     mode    => '0640',
     content => template('openshift_origin/named/forwarders.conf.erb'),
+    notify  => Service['named'],
   }
 
   file { '/var/named':
@@ -62,6 +66,7 @@ class openshift_origin::nameserver {
     group   => 'named',
     mode    => '0750',
     require => Package['bind'],
+    notify  => Service['named'],
   }
 
   file { '/var/named/dynamic':
@@ -70,6 +75,7 @@ class openshift_origin::nameserver {
     group   => 'named',
     mode    => '0750',
     require => File['/var/named'],
+    notify  => Service['named'],
   }
 
   file { 'named key':
@@ -79,6 +85,7 @@ class openshift_origin::nameserver {
     group   => 'named',
     mode    => '0444',
     require => File['/var/named'],
+    notify  => Service['named'],
   }
 
   file { 'named configs':
@@ -88,6 +95,7 @@ class openshift_origin::nameserver {
     mode    => '0644',
     content => template('openshift_origin/named/named.conf.erb'),
     require => Package['bind'],
+    notify  => Service['named'],
   }
 
   # create named/adddress mappings for infrastructure hosts
@@ -99,7 +107,8 @@ class openshift_origin::nameserver {
       mode    => '0644',
       content => template('openshift_origin/named/oo_infrastructure.conf.erb'),
       replace => false,
-      require => File['/var/named']
+      require => File['/var/named'],
+      notify  => Service['named'],
     }
 
     file { 'named infrastructure key':
@@ -109,6 +118,7 @@ class openshift_origin::nameserver {
       group   => 'named',
       mode    => '0444',
       require => File['/var/named'],
+      notify  => Service['named'],
     }
 
     file { 'infrastructure zone contents':
@@ -118,7 +128,8 @@ class openshift_origin::nameserver {
       mode    => '0664',
       content => template('openshift_origin/named/oo_infrastructure.db.erb'),
       replace => false,
-      require => File['infrastructure host configuration']
+      require => File['infrastructure host configuration'],
+      notify  => Service['named'],
     }
 
     exec { 'named restorecon':
@@ -146,7 +157,8 @@ class openshift_origin::nameserver {
       group   => 'named',
       mode    => '0644',
       content => '// no openshift infrastructure zone',
-      require => File['/var/named']
+      require => File['/var/named'],
+      notify  => Service['named'],
     }
 
     exec { 'named restorecon':
