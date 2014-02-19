@@ -851,6 +851,16 @@ class openshift_origin (
     }
   }
 
+  if $development_mode == true {
+    file { 'openshift development marker':
+      path    => '/etc/openshift/development',
+      content => '',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+    }
+  }
+
   # Anchors for containing the implementation class
   anchor { 'openshift_origin::begin': }
 
