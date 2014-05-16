@@ -36,7 +36,6 @@ class openshift_origin::plugins::auth::ldap {
       Package[$mod_ldap],
     ],
     notify  => Service['openshift-broker'],
-    before  => Exec['Broker gem dependencies'],
   }
 
   file { 'Auth plugin config':
@@ -50,7 +49,6 @@ class openshift_origin::plugins::auth::ldap {
       Package[$mod_ldap],
     ],
     notify  => Service['openshift-broker'],
-    before  => Exec['Broker gem dependencies'],
   }
 
   file { 'Console httpd config':
@@ -64,6 +62,5 @@ class openshift_origin::plugins::auth::ldap {
       Package[$mod_ldap],
     ],
     notify  => Service['openshift-console'],
-    before  => Exec['Console gem dependencies'],
   }
 }

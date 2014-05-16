@@ -98,7 +98,6 @@ class openshift_origin::broker {
       Package['httpd'],
       Class['openshift_origin::broker_console_dirs'],
       Selinux_fcontext['/var/www/openshift/broker/tmp(/.*)?'],
-      Exec['Broker gem dependencies'],
     ]
   }
 
@@ -182,40 +181,6 @@ class openshift_origin::broker {
       require => Package['openshift-origin-broker'],
       notify  => Service['openshift-broker'],
     }
-  }
-
-  # SCL and Puppet don't play well together; the 'default' here
-  # circumvents the use of the `scl enable ruby193` mechanism
-  # while still invoking ruby commands in the correct context
-  $broker_bundle_show = $::operatingsystem ? {
-    'Fedora' => '/usr/bin/bundle show',
-    default  => 'LD_LIBRARY_PATH=/opt/rh/ruby193/root/usr/lib64 GEM_PATH=/opt/rh/ruby193/root/usr/local/share/gems:/opt/rh/ruby193/root/usr/share/gems /opt/rh/ruby193/root/usr/bin/bundle show',
-  }
-
-  exec { 'Broker gem dependencies':
-    cwd     => '/var/www/openshift/broker/',
-    command => "${::openshift_origin::params::rm} -f Gemfile.lock && ${broker_bundle_show}",
-    before  => File['/var/www/openshift/broker/tmp'],
-    require => [
-      Package['openshift-origin-broker'],
-      File['openshift broker.conf','mcollective broker plugin config'],
-    ],
-    notify  => [
-      Service['openshift-broker'],
-      File['/var/www/openshift/broker/Gemfile.lock'],
-    ],
-  }
-
-  # This File resource is to guarantee that the Gemfile.lock created
-  # by the subscribed Exec has the appropriate permissions (otherwise
-  # it is created as owned by root:root)
-  file { '/var/www/openshift/broker/Gemfile.lock':
-    ensure    => present,
-    owner     => 'apache',
-    group     => 'apache',
-    mode      => '0644',
-    require   => Package['openshift-origin-broker'],
-    subscribe => Exec['Broker gem dependencies'],
   }
 
   service { 'openshift-broker':

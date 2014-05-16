@@ -44,7 +44,6 @@ class openshift_origin::plugins::auth::htpasswd {
       Package['rubygem-openshift-origin-auth-remote-user','openshift-origin-broker'],
     ],
     notify  => Service['openshift-broker'],
-    before  => Exec['Broker gem dependencies'],
   }
 
   file {'Console htpasswd config':
@@ -58,7 +57,6 @@ class openshift_origin::plugins::auth::htpasswd {
       File['Broker htpasswd config'],
     ],
     notify  => Service['openshift-console'],
-    before  => Exec['Console gem dependencies'],
   }
 
   file { 'Auth plugin config':
@@ -71,6 +69,5 @@ class openshift_origin::plugins::auth::htpasswd {
       Package['rubygem-openshift-origin-auth-remote-user'],
     ],
     notify  => Service['openshift-broker'],
-    before  => Exec['Console gem dependencies'],
   }
 }
