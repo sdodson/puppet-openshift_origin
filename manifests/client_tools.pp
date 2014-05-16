@@ -27,19 +27,4 @@ class openshift_origin::client_tools {
     mode    => '0644',
     require => Package['rhc'],
   }
-
-  # This just quietly wraps rhc commands in SCL on behalf of the CLI user.
-  case $::operatingsystem {
-    'RedHat', 'CentOS' : {
-      file { '/etc/profile.d/rhc.sh':
-        content => "function rhc() {\n  scl enable ruby193 \"rhc $*\"\n}",
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        require => Package['rhc'],
-      }
-    }
-    default : {
-    }
-  }
 }
