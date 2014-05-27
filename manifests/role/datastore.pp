@@ -17,6 +17,7 @@ class openshift_origin::role::datastore inherits openshift_origin::role {
 
   openshift_origin::register_dns{ 'register datastore dns':
     fqdn    => $::openshift_origin::datastore_hostname,
+    role    => 'datastore',
     require => Class['openshift_origin::datastore'],
   }
 }

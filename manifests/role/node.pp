@@ -17,6 +17,7 @@ class openshift_origin::role::node inherits openshift_origin::role {
 
   openshift_origin::register_dns{ 'register node dns':
     fqdn    => $::openshift_origin::node_hostname,
+    role    => 'node',
     require => Class['openshift_origin::node'],
   }
 }

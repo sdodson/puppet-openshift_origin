@@ -19,6 +19,7 @@ class openshift_origin::role::broker inherits openshift_origin::role {
 
   openshift_origin::register_dns{ 'register broker dns':
     fqdn    => $::openshift_origin::broker_hostname,
+    role    => 'broker',
     require => Class['openshift_origin::client_tools','openshift_origin::broker','openshift_origin::console']
   }
 }

@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-define openshift_origin::register_dns($fqdn) {
+define openshift_origin::register_dns($fqdn, $role) {
   if $::openshift_origin::register_host_with_nameserver {
     if $fqdn != 'localhost' {
       $key_algorithm=pick($::openshift_origin::dns_infrastructure_key_algorithm,

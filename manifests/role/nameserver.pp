@@ -17,6 +17,7 @@ class openshift_origin::role::nameserver inherits openshift_origin::role {
 
   openshift_origin::register_dns{ 'register nameserver dns':
     fqdn    => $::openshift_origin::nameserver_hostname,
+    role    => 'nameserver',
     require => Class['openshift_origin::nameserver']
   }
 }
