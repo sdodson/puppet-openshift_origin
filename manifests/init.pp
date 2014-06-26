@@ -164,7 +164,6 @@
 #
 # [*conf_nameserver_upstream_dns*]
 #   List of upstream DNS servers to use when installing nameserver on this node.
-#   These DNS servers are also appended to the resolv.conf for all configured hosts
 #   Default: ['8.8.8.8']
 #
 # [*broker_ip_addr*]

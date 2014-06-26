@@ -1,3 +1,0 @@
-search <%= scope.lookupvar('::openshift_origin::domain') %>
-nameserver <%= scope.lookupvar('::openshift_origin::nameserver_ip_addr') %>
-<%= scope.lookupvar('::openshift_origin::conf_nameserver_upstream_dns').map{|ns| "nameserver #{ns}"}.join("\n") %>

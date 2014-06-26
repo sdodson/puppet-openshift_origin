@@ -13,7 +13,7 @@ options {
     statistics-file "/var/named/data/named_stats.txt";
     memstatistics-file "/var/named/data/named_mem_stats.txt";
     allow-query { any; };
-    recursion no;
+    recursion yes;
 
     /* Path to ISC DLV key */
     bindkeys-file "/etc/named.iscdlv.key";
