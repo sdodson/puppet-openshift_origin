@@ -509,12 +509,12 @@ Default:  Self signed keys are generated. Will not work with multi-broker
 ==== conf_console_product_logo
 Relative path to product logo URL
 
-Default: '/assets/logo-origin.svg'
+Default: 'assets/logo-enterprise-horizontal.svg'
 
 ==== conf_console_product_title
 OpenShift Instance Name
 
-Default: 'OpenShift Origin'
+Default: 'OpenShift Enterprise'
 
 ==== conf_broker_session_secret
 ==== conf_console_session_secret

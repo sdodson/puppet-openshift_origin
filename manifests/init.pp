@@ -389,11 +389,11 @@
 #
 # [*conf_console_product_logo*]
 #   Relative path to product logo URL
-#   Default: '/assets/logo-origin.svg'
+#   Default: 'assets/logo-enterprise-horizontal.svg'
 #
 # [*conf_console_product_title*]
 #   OpenShift Instance Name
-#   Default: 'OpenShift Origin'
+#   Default: 'OpenShift Enterprise'
 #
 # [*conf_broker_session_secret*]
 # [*conf_console_session_secret*]
@@ -777,8 +777,8 @@ class openshift_origin (
   $conf_broker_auth_private_key         = undef,
   $conf_broker_session_secret           = undef,
   $conf_broker_multi_haproxy_per_node   = false,
-  $conf_console_product_logo            = '/assets/logo-origin.svg',
-  $conf_console_product_title           = 'OpenShift Origin',
+  $conf_console_product_logo            = 'assets/logo-enterprise-horizontal.svg',
+  $conf_console_product_title           = 'OpenShift Enterprise',
   $conf_console_session_secret          = undef,
   $conf_valid_gear_sizes                = ['small'],
   $conf_default_gear_capabilities       = ['small'],
