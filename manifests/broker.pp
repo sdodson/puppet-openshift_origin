@@ -230,6 +230,25 @@ class openshift_origin::broker {
     onlyif  => '/bin/grep \'VirtualHost _default\' /etc/httpd/conf.d/ssl.conf',
     require => Package['openshift-origin-broker'],
   }
+
+  if $::openshift_origin::msgserver_routing {  
+    package { "rubygem-openshift-origin-routing-activemq":
+      ensure  => present,
+    }
+    
+    file { 'openshift-origin-routing-activemq':
+      ensure  => present,
+      path    => '/etc/openshift/plugins.d/openshift-origin-routing-activemq.conf',
+      content => template('openshift_origin/activemq/openshift-origin-routing-activemq.conf.erb'),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      require => Package['rubygem-openshift-origin-routing-activemq'],
+      notify  => Service['openshift-broker'],
+    }
+    
+  }
+  
   if $::openshift_origin::install_login_shell {
     include openshift_origin::login_shell
   }

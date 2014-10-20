@@ -27,9 +27,10 @@
 #     * datastore     - Installs MongoDB (not sharded/replicated)
 #     * nameserver    - Installs a BIND dns server configured with a TSIG key for updates.
 #     * load_balancer - Installs HAProxy and Keepalived for Broker API high-availability.
+#     * nginx         - Installs Nginx for application HA deployment
 #   Default: ['broker','node','msgserver','datastore','nameserver']
 #
-#   Note: Multiple servers are required when using the load_balancer role.
+#   Note: Multiple servers are required when using the load_balancer or nginx role.
 # 
 # [*install_method*]
 #   Choose from the following ways to provide packages:
@@ -297,6 +298,21 @@
 #   Default: scrambled
 #   This is the admin password for the ActiveMQ admin console, which is
 #   not needed by OpenShift but might be useful in troubleshooting.
+#
+# [*msgserver_routing*]
+#   Default: false
+#   Determines whether the HA application deployment will be configured.
+#   This requires the use of an external loadbalancer. The nginx role 
+#   is designed to be the external loadbalancer.
+#
+# [*msgserver_routing_password*]
+#   Default: 
+#   This is the password used for the routing information to be passed
+#   through the ActiveMQ network
+#
+# [*routing_hostname*]
+#   Default: 
+#   This is the external hostname for your loadbalancer.
 #
 # [*mcollective_user*]
 # [*mcollective_password*]
@@ -757,6 +773,9 @@ class openshift_origin (
   $mcollective_cluster_members          = $msgserver_cluster_members,
   $msgserver_password                   = 'changeme',
   $msgserver_admin_password             = inline_template('<%= require "securerandom"; SecureRandom.base64 %>'),
+  $msgserver_routing                    = false,
+  $msgserver_routing_password           = '',
+  $routing_hostname                     = '',
   $mcollective_user                     = 'mcollective',
   $mcollective_password                 = 'marionette',
   $mongodb_admin_user                   = 'admin',
@@ -849,6 +868,9 @@ class openshift_origin (
     if member( $roles, 'load_balancer' ) {
       Class['openshift_origin::role::nameserver'] -> Class['openshift_origin::role::load_balancer']
     }
+    if member( $roles, 'nginx' ) {
+      Class['openshift_origin::role::nameserver'] -> Class['openshift_origin::role::nginx']
+    }
   }
 
   # Anchors for containing the implementation class
@@ -882,6 +904,11 @@ class openshift_origin (
   }
   if member( $roles, 'load_balancer' ) {
     class{ 'openshift_origin::role::load_balancer':
+      require => Class['openshift_origin::update_conf_files']
+    }
+  }
+  if member( $roles, 'nginx' ) {
+    class{ 'openshift_origin::role::nginx':
       require => Class['openshift_origin::update_conf_files']
     }
   }
