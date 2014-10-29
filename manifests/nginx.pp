@@ -40,6 +40,7 @@ class openshift_origin::nginx {
     group   => 'root',
     mode    => '0644',
     require => Package['rubygem-openshift-origin-routing-daemon'],
+    notify  => Service['openshift-routing-daemon'],
   }
 
 }
