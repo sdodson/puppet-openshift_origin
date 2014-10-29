@@ -1,8 +1,7 @@
-class openshift_origin::nginx {
+class openshift_origin::role::nginx {
   if $::openshift_origin::manage_firewall {
     include openshift_origin::firewall::apache
   }
-  include openshift_origin::selbooleans
 
   package {
     [
@@ -11,12 +10,12 @@ class openshift_origin::nginx {
     ]:
     ensure  => present,
   }
-  
-  selboolean { 'httpd_can_network_connect':
-    value      => 'on',
-    persistent => true,
-  }
-  
+  ensure_resource( 'selboolean', 'httpd_can_network_connect', {
+      value       => on,
+      persistent  => true,
+    }
+  )
+
   service { 'nginx14-nginx':
     ensure     => true,
     enable     => true,
@@ -30,7 +29,7 @@ class openshift_origin::nginx {
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
-    require    => Package['rubygem-openshift-routing-daemon'],
+    require    => Package['rubygem-openshift-origin-routing-daemon'],
   }
   
   file { 'routing-daemon':
@@ -40,8 +39,7 @@ class openshift_origin::nginx {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    require => Package['rubygem-openshift-origin-routing-activemq'],
-    notify  => Service['openshift-broker'],
+    require => Package['rubygem-openshift-origin-routing-daemon'],
   }
 
 }
