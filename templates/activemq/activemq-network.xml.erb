@@ -83,6 +83,9 @@
                <authenticationUser username="<%= scope.lookupvar('::openshift_origin::mcollective_user') %>" password="<%= scope.lookupvar('::openshift_origin::mcollective_password') %>" groups="mcollective,everyone"/>
                <authenticationUser username="amquser" password="<%= scope.lookupvar('::openshift_origin::msgserver_password') %>" groups="admins,everyone"/>
                <authenticationUser username="admin" password="<%= scope.lookupvar('::openshift_origin::msgserver_admin_password') %>" groups="mcollective,admin,everyone"/>
+               <% if scope.lookupvar("openshift_origin::msgserver_routing") == true %>
+               <authenticationUser username="routinginfo" password="<%= scope.lookupvar('::openshift_origin::msgserver_routing_password') %>" groups="routinginfo,everyone"/>
+               <% end %>
              </users>
           </simpleAuthenticationPlugin>
           <authorizationPlugin>
