@@ -6,7 +6,11 @@ LOAD_BALANCER=nginx
 UPDATE_INTERVAL=5
 
 LOGFILE=/var/log/openshift/routing-daemon.log
+<% if scope.lookupvar("openshift_origin::development_mode") == true %>
 LOGLEVEL=debug
+<% else %>
+LOGLEVEL=info
+<% end %>
 #LOGLEVEL=info
 #LOGLEVEL=warn
 #LOGLEVEL=error
