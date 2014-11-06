@@ -16,8 +16,17 @@
 class openshift_origin::plugins::frontend::apache_vhost {
   include openshift_origin::plugins::frontend::apache
 
+  # apache-mod-rewrite and apache-vhost plugins are mutually exclusive
+  # while we say that we're 'require'ing the package here, please note that
+  # it's referencing the puppet resource that ensures the package is absent.
   package { 'rubygem-openshift-origin-frontend-apache-vhost':
-    require => Class['openshift_origin::install_method'],
+    require =>  [ Class['openshift_origin::install_method'],
+                  Package['rubygem-openshift-origin-frontend-apache-mod-rewrite'],
+                ]
+  }
+  package { 'rubygem-openshift-origin-frontend-apache-mod-rewrite':
+    ensure  => absent,
+    require => Exec['prevent_node_frontend_changes'],
   }
 
   if member( $openshift_origin::roles, 'broker' ) {
