@@ -129,7 +129,11 @@
 #   for configuring the host's name at install, and also for configuring
 #   the broker application to reach the services needed.
 #
-#   IMPORTANT NOTE: if installing a nameserver, the script will create
+#   NOTE: It's often useful to ensure that this is the public hostname for
+#   hosts with the node role as this is used as the target for application
+#   CNAMEs.
+#
+#   NOTE: if installing a nameserver, the script will create
 #   DNS entries for the hostnames of the other components being
 #   installed on this host as well. If you are using a nameserver set
 #   up separately, you are responsible for all necessary DNS entries.
@@ -218,9 +222,11 @@
 #   within a Broker cluster.
 #
 # [*node_ip_addr*]
-#   Default: the current IP (at install)
-#   This is used for the node to give a public IP, if different from the
-#   one on its NIC.
+#
+#   Note: This is used to specify the public IP of the host if different from the
+#   one on its NIC. In IaaS environments this is often be set to $::ec2_public_ipv4 fact.
+#
+#   Default: $::ipaddress (from facter)
 #
 # [*node_profile*]
 #   This is the specific node's gear profile
