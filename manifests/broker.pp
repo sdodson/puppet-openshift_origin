@@ -205,6 +205,14 @@ class openshift_origin::broker {
     require => Package['rubygem-openshift-origin-msg-broker-mcollective'],
   }
 
+  if $::openshift_origin::msgserver_admin_passwd == '' {
+    include openshift_origin::random_password
+    Class['openshift_origin::random_password'] -> File['openshift broker.conf']
+    $broker_auth_salt = inline_template("<%=File.read('/etc/openshift/random_password')%>")
+  } else {
+    $admin_pass = $::openshift_origin::conf_broker_auth_salt,
+  }
+
   file { 'openshift broker.conf':
     path    => '/etc/openshift/broker.conf',
     content => template('openshift_origin/broker/broker.conf.erb'),

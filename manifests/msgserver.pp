@@ -80,6 +80,14 @@ class openshift_origin::msgserver (
     notify  => Service['activemq'],
   }
 
+  if $::openshift_origin::msgserver_admin_passwd == '' {
+    include openshift_origin::random_password
+    Class['openshift_origin::random_password'] -> File['jetty-realm.properties config']
+    $admin_pass = inline_template("<%=File.read('/etc/openshift/random_password')%>")
+  } else {
+    $admin_pass = $::openshift_origin::msgserver_admin_passwd,
+  }
+
   file { 'jetty-realm.properties config':
     path    => '/etc/activemq/jetty-realm.properties',
     content => template('openshift_origin/activemq/jetty-realm.properties.erb'),

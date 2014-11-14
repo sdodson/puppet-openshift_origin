@@ -17,4 +17,4 @@
 
 # Defines users that can access the web (console, demo, etc.)
 # username: password [,rolename ...]
-admin: <%= scope.lookupvar('::openshift_origin::msgserver_admin_password') %>, admin 
+admin: <%= @admin_passwd %>, admin 
